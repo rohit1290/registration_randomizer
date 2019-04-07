@@ -7,11 +7,6 @@ elgg_register_event_handler('init', 'system', 'registration_randomizer_init');
  * Init
  */
 function registration_randomizer_init() {
-	// Override registration page
-	elgg_unregister_page_handler('register');
-
-	// serve registration pages
-	elgg_register_page_handler('register', 'registration_randomizer_page_handler');
 
 	// check referrers
 	elgg_register_plugin_hook_handler('action', 'register', 'registration_randomizer_referrer_check');
@@ -23,35 +18,12 @@ function registration_randomizer_init() {
 }
 
 /**
- * Serves registration URLs as created by the registration_randomizer_login_menu() callback
- *
- * /register/:ts/:token Where :token is the token and :ts is the current timestamp.
- *
- * @param array $page
- */
-function registration_randomizer_page_handler($page) {
-	// tarpit if the wrong token + ts combo
-	$ts = elgg_extract(0, $page);
-	$token = elgg_extract(1, $page);
-
-	if (!registration_randomizer_is_valid_token($token, $ts)) {
-		registration_randomizer_log("Invalid token for registration page");
-		forward('/', 404);
-	} else {
-		echo elgg_view_resource('account/register');
-		return true;
-	}
-	registration_randomizer_log("No token for registration page");
-
-	forward('/', 404);
-}
-
-/**
  * Hashes the site secret, UA, and a ts.
  *
  * @return mixed A token if time or req is passed, and array of info if not
  */
 function registration_randomizer_generate_token($passed_time = null, $passed_req = null) {
+
 	if ($passed_time === null) {
 		$ts = time();
 	} else {
@@ -64,7 +36,7 @@ function registration_randomizer_generate_token($passed_time = null, $passed_req
 		$req = $passed_req;
 	}
 
-	$str = get_site_secret();
+	$str = md5('registration_randomizer');
 	$str .= filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
 	$str .= filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
 	$str .= $ts;
