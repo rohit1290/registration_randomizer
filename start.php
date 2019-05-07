@@ -7,7 +7,9 @@ elgg_register_event_handler('init', 'system', 'registration_randomizer_init');
  * Init
  */
 function registration_randomizer_init() {
-
+	
+	// remove elgg's default register page
+	elgg_unregister_route('account:register');
 	// check referrers
 	elgg_register_plugin_hook_handler('action', 'register', 'registration_randomizer_referrer_check');
 
