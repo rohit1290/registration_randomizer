@@ -10,11 +10,36 @@ function registration_randomizer_init() {
 	
 	// remove elgg's default register page
 	elgg_unregister_route('account:register');
+	
 	// check referrers
-	elgg_register_plugin_hook_handler('action', 'register', 'registration_randomizer_referrer_check');
+		elgg_register_plugin_hook_handler('action:validate', 'register', function ($hook, $action, $return) {
+			$ref = filter_input(INPUT_SERVER, 'HTTP_REFERER');
+			$url = elgg_get_site_url();
+			list($register, $ts, $token) = explode('/', str_replace($url, '', $ref));
+
+			if ($register !== 'register') {
+				return $return;
+			}
+
+			if (!registration_randomizer_is_valid_token($token, $ts)) {
+				registration_randomizer_log("Invalid referrer for registration action");
+				register_error("Cannot complete registration at this time.");
+				forward('/', '403');
+			}
+
+			return $return;
+		});
 
 	// replace view vars
-	elgg_register_plugin_hook_handler('register', 'menu:login', 'registration_randomizer_login_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:login', function ($hook, $type, $menu, $params) {
+		foreach ($menu as $key => $item) {
+			if ($item->getName() == 'register') {
+				$info = registration_randomizer_generate_token();
+				$item->setHref('/register/' . $info['ts'] . '/' . $info['token']);
+			}
+		}
+		return $menu;
+	});
 
 	elgg_set_config('rr_debug', false);
 }
@@ -69,32 +94,6 @@ function registration_randomizer_is_valid_token($token, $time, $req = null) {
 }
 
 /**
- * Check the referrer to see if its token and timestamp match
- *
- * @param type $hook
- * @param type $action
- * @param type $return
- * @return null
- */
-function registration_randomizer_referrer_check($hook, $action, $return) {
-	$ref = filter_input(INPUT_SERVER, 'HTTP_REFERER');
-	$url = elgg_get_site_url();
-	list($register, $ts, $token) = explode('/', str_replace($url, '', $ref));
-
-	if ($register !== 'register') {
-		return $return;
-	}
-
-	if (!registration_randomizer_is_valid_token($token, $ts)) {
-		registration_randomizer_log("Invalid referrer for registration action");
-		register_error("Cannot complete registration at this time.");
-		forward('/', 403);
-	}
-
-	return $return;
-}
-
-/**
  * Log to file
  *
  * @param type $msg
@@ -120,22 +119,4 @@ function registration_randomizer_log($msg, $all = true) {
 	file_put_contents(elgg_get_data_path() . 'rr_log.log', print_r($data, true), FILE_APPEND);
 }
 
-/**
- * Adds timestamp and token to the registration link
- *
- * @param string         $hook
- * @param string         $type
- * @param ElggMenuItem[] $menu
- * @param array          $params
- * @return ElggMenuItem[] $menu
- */
-function registration_randomizer_login_menu($hook, $type, $menu, $params) {
-	foreach ($menu as $key => $item) {
-		if ($item->getName() == 'register') {
-			$info = registration_randomizer_generate_token();
-			$item->setHref('/register/' . $info['ts'] . '/' . $info['token']);
-		}
-	}
 
-	return $menu;
-}

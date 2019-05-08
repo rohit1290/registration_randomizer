@@ -1,7 +1,7 @@
 <?php 
 
 /**
- * Serves registration URLs as created by the registration_randomizer_login_menu() callback
+ * Serves registration URLs as created by the elgg_register_plugin_hook_handler 'register', 'menu:login' callback
  *
  * /register/:ts/:token Where :token is the token and :ts is the current timestamp.
  *
@@ -21,6 +21,6 @@
 	}
 	registration_randomizer_log("No token for registration page");
 
-	forward('/', 404);
+	forward('/', '404');
 
  ?>

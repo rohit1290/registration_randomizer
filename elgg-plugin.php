@@ -2,7 +2,7 @@
 
 return [
 	'routes' => [
-		'default:object:registration_randomizer' => [
+		'account:register' => [
   		'path' => 'register/{ts}/{token}',
   		'resource' => 'registration_randomizer/register',
 		],
