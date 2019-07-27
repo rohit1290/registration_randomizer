@@ -12,7 +12,10 @@ function registration_randomizer_init() {
 	// elgg_unregister_route('account:register');
 	
 	// check referrers
-		elgg_register_plugin_hook_handler('action:validate', 'register', function ($hook, $action, $return) {
+		elgg_register_plugin_hook_handler('action:validate', 'register', function (\Elgg\Hook $hook) {
+			$action = $hook->getType();
+			$return = $hook->getValue();
+			
 			$ref = filter_input(INPUT_SERVER, 'HTTP_REFERER');
 			$url = elgg_get_site_url();
 			list($register, $ts, $token) = explode('/', str_replace($url, '', $ref));
@@ -31,7 +34,8 @@ function registration_randomizer_init() {
 		});
 
 	// replace view vars
-	elgg_register_plugin_hook_handler('register', 'menu:login', function ($hook, $type, $menu, $params) {
+	elgg_register_plugin_hook_handler('register', 'menu:login', function (\Elgg\Hook $hook) {
+		$menu = $hook->getValue();
 		foreach ($menu as $key => $item) {
 			if ($item->getName() == 'register') {
 				$info = registration_randomizer_generate_token();
