@@ -75,11 +75,11 @@ function registration_randomizer_generate_token($passed_time = null, $passed_req
 	$token = md5($str);
 
 	if ($passed_time === null && $passed_req === null) {
-		return array(
+		return [
 			'ts' => $ts,
 			'token' => $token,
 			'req' => $req
-		);
+		];
 	} else {
 		return $token;
 	}
@@ -122,5 +122,3 @@ function registration_randomizer_log($msg, $all = true) {
 
 	file_put_contents(elgg_get_data_path() . 'rr_log.log', print_r($data, true), FILE_APPEND);
 }
-
-
