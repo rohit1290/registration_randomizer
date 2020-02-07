@@ -23,4 +23,4 @@ if (!registration_randomizer_is_valid_token($token, $ts)) {
 
 	forward('/', '404');
 
-	?>
+	
