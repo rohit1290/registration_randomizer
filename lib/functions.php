@@ -46,7 +46,11 @@ function registration_randomizer_generate_token($passed_time = null, $passed_req
  * @return bool
  */
 function registration_randomizer_is_valid_token($token, $time, $req = null) {
-	return $token === registration_randomizer_generate_token($time, $req);
+	if($time < strtotime("-5 minutes")) {
+		return false;
+	} else {
+		return $token === registration_randomizer_generate_token($time, $req);
+	}
 }
 
 /**
