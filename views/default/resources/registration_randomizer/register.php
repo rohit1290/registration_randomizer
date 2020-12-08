@@ -8,9 +8,9 @@
  * @param array $page
  */
 
-	// tarpit if the wrong token + ts combo
-	$ts = elgg_extract('ts', $vars, 0);
-	$token = elgg_extract('token', $vars, 0);
+// tarpit if the wrong token + ts combo
+$ts = elgg_extract('ts', $vars, 0);
+$token = elgg_extract('token', $vars, 0);
 
 if (!registration_randomizer_is_valid_token($token, $ts)) {
 	registration_randomizer_log("Invalid token for registration page");
@@ -19,8 +19,6 @@ if (!registration_randomizer_is_valid_token($token, $ts)) {
 	echo elgg_view_resource('account/register');
 	return true;
 }
-	registration_randomizer_log("No token for registration page");
-
-	forward('/', '404');
-
 	
+registration_randomizer_log("No token for registration page");
+forward('/', '404');

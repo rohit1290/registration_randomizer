@@ -46,11 +46,14 @@ function registration_randomizer_generate_token($passed_time = null, $passed_req
  * @return bool
  */
 function registration_randomizer_is_valid_token($token, $time, $req = null) {
-	if($time < strtotime("-5 minutes")) {
-		return false;
-	} else {
+	$diff = (int)((time() - $time)/60); // Difference in minute
+	$cutoff = (int)elgg_get_plugin_setting('reg_token_valid', 'registration_randomizer', 5);  // Cutoff in minute
+
+	if($diff <= $cutoff) {
 		return $token === registration_randomizer_generate_token($time, $req);
 	}
+	
+	return false;
 }
 
 /**
