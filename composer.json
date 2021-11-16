@@ -1,7 +1,18 @@
 {
-    "name": "rohit1290/registration_randomizer",
-    "type": "elgg-plugin",
-    "extra": {
-        "installer-name": "registration_randomizer"
-    }
+	"name": "registration_randomizer",
+	"description": "Randomly changes the URL of the registration form to thwart spammers.",
+	"homepage": "http://www.campuskarma.in/",
+	"type": "elgg-plugin",
+	"keywords": ["elgg", "plugin"],
+	"license": "Private Use",
+	"support": {
+		"source": "https://github.com/rohit1290/registration_randomizer",
+		"issues": "https://github.com/rohit1290/registration_randomizer/issues"
+	},
+	"require": {
+		"composer/installers": "^1.0.8"
+	},
+	"conflict": {
+		"elgg/elgg": "<4.0"
+	}
 }

@@ -14,11 +14,11 @@ $token = elgg_extract('token', $vars, 0);
 
 if (!registration_randomizer_is_valid_token($token, $ts)) {
 	registration_randomizer_log("Invalid token for registration page");
-	forward('/', 404);
+	throw new \Elgg\Exceptions\Http\PageNotFoundException();
 } else {
 	echo elgg_view_resource('account/register');
 	return true;
 }
 	
 registration_randomizer_log("No token for registration page");
-forward('/', '404');
+throw new \Elgg\Exceptions\Http\PageNotFoundException();

@@ -23,7 +23,7 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
   			if (!registration_randomizer_is_valid_token($token, $ts)) {
   				registration_randomizer_log("Invalid referrer for registration action");
   				register_error("Cannot complete registration at this time.");
-  				forward('/', '403');
+          throw new \Elgg\Exceptions\HttpException(elgg_echo('invalid_request_signature'), ELGG_HTTP_FORBIDDEN);
   			}
 
   			return $return;
