@@ -3,7 +3,7 @@ require_once __DIR__ . "/lib/functions.php";
 return [
 	'plugin' => [
 		'name' => 'Registration Randomizer',
-		'version' => '4.0',
+		'version' => '5.0',
 		'dependencies' => [],
 	],
 	'bootstrap' => RegistrationRandomizer::class,

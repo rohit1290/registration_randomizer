@@ -8,7 +8,7 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
   	// elgg_unregister_route('account:register');
 
   	// check referrers
-  		elgg_register_plugin_hook_handler('action:validate', 'register', function (\Elgg\Hook $hook) {
+  		elgg_register_event_handler('action:validate', 'register', function (\Elgg\Hook $hook) {
   			$action = $hook->getType();
   			$return = $hook->getValue();
 
@@ -22,7 +22,7 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
 
   			if (!registration_randomizer_is_valid_token($token, $ts)) {
   				registration_randomizer_log("Invalid referrer for registration action");
-  				register_error("Cannot complete registration at this time.");
+  				elgg_register_error_message("Cannot complete registration at this time.");
           throw new \Elgg\Exceptions\HttpException(elgg_echo('invalid_request_signature'), ELGG_HTTP_FORBIDDEN);
   			}
 
@@ -30,7 +30,7 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
   		});
 
   	// replace view vars
-  	elgg_register_plugin_hook_handler('register', 'menu:login', function (\Elgg\Hook $hook) {
+  	elgg_register_event_handler('register', 'menu:login', function (\Elgg\Hook $hook) {
   		$menu = $hook->getValue();
   		foreach ($menu as $key => $item) {
   			if ($item->getName() == 'register') {
