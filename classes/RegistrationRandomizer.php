@@ -8,9 +8,9 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
   	// elgg_unregister_route('account:register');
 
   	// check referrers
-  		elgg_register_event_handler('action:validate', 'register', function (\Elgg\Hook $hook) {
-  			$action = $hook->getType();
-  			$return = $hook->getValue();
+  		elgg_register_event_handler('action:validate', 'register', function (\Elgg\Event $event) {
+  			$action = $event->getType();
+  			$return = $event->getValue();
 
   			$ref = filter_input(INPUT_SERVER, 'HTTP_REFERER');
   			$url = elgg_get_site_url();
@@ -30,8 +30,8 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
   		});
 
   	// replace view vars
-  	elgg_register_event_handler('register', 'menu:login', function (\Elgg\Hook $hook) {
-  		$menu = $hook->getValue();
+  	elgg_register_event_handler('register', 'menu:login', function (\Elgg\Event $event) {
+  		$menu = $event->getValue();
   		foreach ($menu as $key => $item) {
   			if ($item->getName() == 'register') {
   				$info = registration_randomizer_generate_token();

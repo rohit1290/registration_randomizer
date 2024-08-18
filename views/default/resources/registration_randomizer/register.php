@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Serves registration URLs as created by the elgg_register_plugin_hook_handler 'register', 'menu:login' callback
+ * Serves registration URLs as created by the elgg_register_event_handler 'register', 'menu:login' callback
  *
  * /register/:ts/:token Where :token is the token and :ts is the current timestamp.
  *
