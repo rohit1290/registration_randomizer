@@ -14,7 +14,12 @@ class RegistrationRandomizer extends DefaultPluginBootstrap {
 
   			$ref = filter_input(INPUT_SERVER, 'HTTP_REFERER');
   			$url = elgg_get_site_url();
-  			list($register, $ts, $token) = explode('/', str_replace($url, '', $ref));
+        $parts = explode('/', str_replace($url, '', $ref));
+
+        // Assign with default empty strings if not set
+        $register = $parts[0] ?? '';
+        $ts = $parts[1] ?? 1;
+        $token = $parts[2] ?? 1;
 
   			if ($register !== 'register') {
   				return $return;
